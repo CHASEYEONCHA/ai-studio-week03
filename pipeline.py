@@ -37,10 +37,28 @@ df["단가"] = (pd.to_numeric(df["단가"].astype(str).str.replace(",", "", rege
 
 # '매출액 = 단가 x 수량' 파생 열 생성
 df["매출액"] = df["단가"] * df["수량"]
-print(" === df 데이터프레임 ('매출액' 추가)=== ")
-print(df.head())
+# print(" === df 데이터프레임 ('매출액' 추가)=== ")
+# print(df.head())
 
 """매출 총합, 평균 계산"""
+# '주문일자'에서 '월' 추출
+df["주문일자"] = pd.to_datetime(df["주문일자"])
+df["월"] = df["주문일자"].dt.month
+# print(" === df 데이터프레임 ('월' 추가)=== ")
+# print(df.head())
+
+# 월별 x 카테고리별 매출 총합, 평균, 거래건수 집계
+## 월별 카테고리
+by_mon = df.groupby(["월", "카테고리"])["매출액"].agg(총매출="sum", 평균매출="mean", 거래건수="count")
+by_mon = by_mon.reset_index()
+# print(" === 월별 카테고리별 매출액 합계 === ")
+# print(by_mon.head())
+
+## 카테고리별
+by_cat = df.groupby("카테고리")["매출액"].agg(총매출="sum")
+by_cat = by_cat.reset_index().sort_values("총매출", ascending=False)
+# print(" === 카테고리별 매출액 합계 === ")
+# print(by_cat.head())
 
 """Excel 파일 저장"""
 
