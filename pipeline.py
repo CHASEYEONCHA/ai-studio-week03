@@ -10,9 +10,9 @@ RAW_DATA_path = BASE_DIR / "RAW_DATA.csv"
 df = pd.read_csv(RAW_DATA_path, encoding="cp949")
 
 """데이터 점검 - shape, info() 확인"""
-print(" === RAW_DATA.csv 파일 내용 === ")
-print(df.shape) # (행 수, 열 수)
-print(df.info()) # 열 이름, 타입, 결측 여부
+# print(" === RAW_DATA.csv 파일 내용 === ")
+# print(df.shape) # (행 수, 열 수)
+# print(df.info()) # 열 이름, 타입, 결측 여부
 
 """확인 결과"""
 # === RAW_DATA.csv 파일 내용 === 
@@ -32,6 +32,13 @@ print(df.info()) # 열 이름, 타입, 결측 여부
 # None
 
 """데이터 정제 및 파생 열 생성"""
+# '단가' 열의 콤마 제거, 숫자 타입 변환
+df["단가"] = (pd.to_numeric(df["단가"].astype(str).str.replace(",", "", regex = False), errors = "coerce").astype("Int64"))
+
+# '매출액 = 단가 x 수량' 파생 열 생성
+df["매출액"] = df["단가"] * df["수량"]
+print(" === df 데이터프레임 ('매출액' 추가)=== ")
+print(df.head())
 
 """매출 총합, 평균 계산"""
 
