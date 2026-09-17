@@ -61,5 +61,9 @@ by_cat = by_cat.reset_index().sort_values("총매출", ascending=False)
 # print(by_cat.head())
 
 """Excel 파일 저장"""
+with pd.ExcelWriter("Monthly_Report.xlsx", engine="openpyxl") as writer:
+    by_mon.to_excel(writer, sheet_name="월별카테고리요약", index=False)
+    by_cat.to_excel(writer, sheet_name="카테고리별합계", index=False)
 
 """검증 코드"""
+assert df["매출액"].sum() == by_mon["총매출"].sum()
